@@ -1,0 +1,114 @@
+body { font-family: sans-serif; padding: 10px; background: #f8f8f8; }
+
+.controls { margin-bottom: 20px; }
+
+.center {
+	margin: auto;
+	width: 95%;
+	padding: 10px;
+}
+
+div.toolbarContainer {
+	width:100%;
+	overflow:auto;
+}
+div.toolbarContainer div {
+	float:left;
+	padding: 10px;
+}
+
+.fretboard { display: grid; gap: 8px; }
+
+.string { display: flex; gap: 4px; margin-bottom: 10px; align-items: center; }
+
+.fret {
+	padding: 6px 10px;
+	background: white;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	text-align: center;
+	min-width: 40px;
+}
+
+.fret-zero-divider {
+	padding: 6px 10px;
+	text-align: center;
+	min-width: 10px;
+}
+
+.fret-accented {
+	padding: 6px 10px;
+	/* background: #f5f7da; */
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	text-align: center;
+	min-width: 40px;
+	font-weight: bold;
+}	
+
+.string-label {
+	width: 30px;
+	text-align: right;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+.fret-labels {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+}
+
+.fret-label-gold {
+	padding: 6px 10px;
+	background: gold;
+	border: 1px solid #fff;
+	border-radius: 6px;
+	text-align: center;
+	text-weight: bold;
+	min-width: 40px;
+	font-weight: bold;
+}
+
+.fret-label-lightgray {
+	padding: 6px 10px;
+	background: white;
+	border: 1px solid #fff;
+	border-radius: 6px;
+	text-align: center;
+	text-weight: bold;
+	min-width: 40px;
+}
+
+.note-a{ background: rgba(240, 158, 167, 1); }
+.note-b{ background: rgba(193, 235, 192, 1); }
+.note-c{ background: rgba(205, 171, 235, 1); }
+.note-d{ background: rgba(250, 250, 190, 1); }
+.note-e{ background: rgba(246, 194, 243, 1); }
+.note-f{ background: rgba(246, 202, 148, 1); }
+.note-g{ background: rgba(199, 202, 255, 1); }
+
+.note-a-acc{ background: rgba(240, 158, 167, 0.2); }
+.note-b-acc{ background: rgba(193, 235, 192, 0.2); }
+.note-c-acc{ background: rgba(205, 171, 235, 0.2); }
+.note-d-acc{ background: rgba(250, 250, 190, 0.2); }
+.note-e-acc{ background: rgba(246, 194, 243, 0.2); }
+.note-f-acc{ background: rgba(246, 202, 148, 0.2); }
+.note-g-acc{ background: rgba(199, 202, 255, 0.2); }
+
+.button {
+    background-color: #8dd317;
+    border: 1px solid #101010;
+    color: black;
+    padding: 4px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.bottom{
+	position: fixed; 
+	width:100%;
+	bottom:0;
+}
