@@ -93,3 +93,8 @@ div.toolbarContainer div {
 	stroke-width:1;
 	fill: transparent;
 }
+
+.svgLineString {
+	stroke:gray;
+	stroke-width:5;
+}

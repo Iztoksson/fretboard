@@ -123,10 +123,16 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 			}
 			
 			var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+			
 			var elRect = svgCreateRect(rectX, rectY, rectClassName);
 			elG.appendChild(elRect);
+			
 			var elText = svgCreateText(textX, textY, textClassName, textValue);
 			elG.appendChild(elText);
+			
+			var elLine = svgCreateLineString(rectX+50, rectY+(50/2), rectX+60, rectY+(50/2), "svgLineString");
+			elG.appendChild(elLine);
+			
 			svgContainer.appendChild(elG);
 			rectX += 60;
 			textX += 60;
@@ -164,6 +170,17 @@ function svgClear(svgContainer){
 	while (svgContainer.firstChild) {
 		svgContainer.removeChild(svgContainer.firstChild);
 	}
+}
+
+function svgCreateLineString(x1, y1, x2, y2, className) {
+	var el = document.createElementNS("http://www.w3.org/2000/svg", "line");
+	el.setAttribute("x1", x1);
+	el.setAttribute("y1", y1);
+	el.setAttribute("x2", x2);
+	el.setAttribute("y2", y2);
+	el.setAttribute("class", className);
+	return el;
+	//<line x1="140" y1="40" x2="150" y2="40" class="svgLineString" />
 }
 
 function svgResetXandY(){
