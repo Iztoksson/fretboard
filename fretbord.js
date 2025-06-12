@@ -55,7 +55,7 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 		}
 		
 		var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-		var rectClassName = "svgRectNumbers";			
+		var rectClassName = "svgRectNumbers";
 		var textClassName = "svgTextNumbers";
 		var textValue = "";
 		
@@ -101,7 +101,7 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 				textX += 20;
 			}
 			
-			var rectClassName = "svgRect";			
+			var rectClassName = "svgRect";
 			var textClassName = "svgText";
 			var textValue = "";
 
@@ -143,6 +143,30 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 		textX = 75;
 		rectY += 60;
 		textY += 60;
+	});
+	
+	// DOTS:
+	labelRange.forEach(i => {
+		var dot = "";
+		if (accentedFret.includes(i)) {
+			dot = "O";
+			if (i == 12 || i == 24)
+			{
+				dot = "OO";
+			}
+		}
+		var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+		var rectClassName = "svgRectDots";
+		var textClassName = "svgText";
+		var textValue = "";
+		
+		var elRect = svgCreateRect(rectX, rectY, rectClassName);
+		elG.appendChild(elRect);
+		var elText = svgCreateText(textX, textY, textClassName, dot);
+		elG.appendChild(elText);
+		svgContainer.appendChild(elG);
+		rectX += (i == 0 ? 80 : 60);
+		textX += (i == 0 ? 80 : 60);
 	});
 }
 
