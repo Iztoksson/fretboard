@@ -27,40 +27,53 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 	
 	// ## CONSTS:
 	const notes = useFlats ? Note.makeNotesFlat() : Note.makeNotesSharp();
-	const container = document.getElementById("fretboard");
-	const fretLabels = document.getElementById("fretLabels");	  
 	const accentedFret = [0, 3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
-	container.innerHTML = "";
-	fretLabels.innerHTML = "";
+	const svgContainer = document.getElementById("svgFretboard");
+	const labelRange = Array.from({ length: frets + 1 }, (_, i) => i);
+	
+	svgClear(svgContainer);
+	svgResetXandY();
 	
 	// ## Validations and default overrides:
 	if(frets > 24) frets = 24;
 	if(frets < 1) frets = 1;
 
 	// ## Fret labels: normal order or reversed if left-handed:
-	const labelRange = Array.from({ length: frets + 1 }, (_, i) => i);
 	if (lefthanded) labelRange.reverse();
 	labelRange.forEach(i => {
 		
 		if((!lefthanded && i == 1) || (lefthanded && i == 0))
 		{
-			const labelZeroDivider = document.createElement("div");
-			labelZeroDivider.classList.add("fret-zero-divider");
-			labelZeroDivider.textContent = " ";
-			fretLabels.appendChild(labelZeroDivider);
+			var elGZ = document.createElementNS("http://www.w3.org/2000/svg", "g");
+			var elRectZ = svgCreateRect(rectX, rectY, "svgRectZeroFretSpacer");
+			elGZ.appendChild(elRectZ);
+			var elTextZ = svgCreateText(textX, textY, textClassName, "");
+			elGZ.appendChild(elTextZ);
+			svgContainer.appendChild(elGZ);
+			rectX += 20;
+			textX += 20;
 		}
 		
-		const label = document.createElement("div");
-		label.className = accentedFret.includes(i) ? "fret-label-gold" : "fret-label-lightgray";
-		label.textContent = i;
-		fretLabels.appendChild(label);
+		var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+		var rectClassName = "svgRectNumbers";			
+		var textClassName = "svgTextNumbers";
+		var textValue = "";
+		
+		var elRect = svgCreateRect(rectX, rectY, rectClassName);
+		elG.appendChild(elRect);
+		var elText = svgCreateText(textX, textY, textClassName, i);
+		elG.appendChild(elText);
+		svgContainer.appendChild(elG);
+		rectX += 60;
+		textX += 60;
 	});
+	rectX = 50;
+	textX = 75;
+	rectY += 40;
+	textY += 40;
 
 	// ## Use strings as-is (no reversing):
 	strings.forEach(baseNote => {
-		const stringDiv = document.createElement("div");
-		stringDiv.classList.add("string");
-
 		const startIndex = notes.findIndex(n => n.Note === baseNote);
 		let finalNotes = notes.slice(startIndex);
 
@@ -74,48 +87,99 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 
 		nt = lefthanded ? frets : 0;
 		sliced.forEach(note => {
-			const fretDiv = document.createElement("div");
+			const isAccidental = note.Note.includes("#") || note.Note.includes("b");
 			
 			if((!lefthanded && nt == 1) || (lefthanded && nt == 0))
 			{
-				const fretZeroDivider = document.createElement("div");
-				fretZeroDivider.classList.add("fret-zero-divider");
-				fretZeroDivider.textContent = " ";
-				stringDiv.appendChild(fretZeroDivider);
-			}		
+				var elGZ = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				var elRectZ = svgCreateRect(rectX, rectY, "svgRectZeroFretSpacer");
+				elGZ.appendChild(elRectZ);
+				var elTextZ = svgCreateText(textX, textY, textClassName, "");
+				elGZ.appendChild(elTextZ);
+				svgContainer.appendChild(elGZ);
+				rectX += 20;
+				textX += 20;
+			}
 			
-			// Different style for Accented frets (0, 3, 5...):
-			fretDiv.classList.add(accentedFret.includes(nt) ? "fret-accented" : "fret");
-			
+			var rectClassName = "svgRect";			
+			var textClassName = "svgText";
+			var textValue = "";
+
 			// Omit accidentals, and Each Note should have a different color:
-			const isAccidental = note.Note.includes("#") || note.Note.includes("b");
 			if (isAccidental && omitAccidentals)
 			{
-				fretDiv.textContent = " ";
+				textValue = " ";
+				rectClassName += " note-" + note.Note.replace("b", "").replace("#", "").toLowerCase() + "-acc";
 			}
 			else if (isAccidental && !omitAccidentals)
 			{
-				fretDiv.textContent = note.Note;
-				fretDiv.classList.add("note-" + note.Note.replace("b", "").replace("#", "").toLowerCase() + "-acc");
+				textValue = note.Note;
+				rectClassName += " note-" + note.Note.replace("b", "").replace("#", "").toLowerCase() + "-acc";
 			}
 			else if (!isAccidental)
 			{
-				fretDiv.textContent = note.Note;
-				fretDiv.classList.add("note-" + note.Note.replace("b", "").replace("#", "").toLowerCase());
+				textValue = note.Note;
+				rectClassName += " note-" + note.Note.replace("b", "").replace("#", "").toLowerCase();
 			}
 			
-			stringDiv.appendChild(fretDiv);
+			var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+			var elRect = svgCreateRect(rectX, rectY, rectClassName);
+			elG.appendChild(elRect);
+			var elText = svgCreateText(textX, textY, textClassName, textValue);
+			elG.appendChild(elText);
+			svgContainer.appendChild(elG);
+			rectX += 60;
+			textX += 60;
 			
 			lefthanded ? nt-- : nt++;
 		});
-
-		container.appendChild(stringDiv);
+		rectX = 50;
+		textX = 75;
+		rectY += 60;
+		textY += 60;
 	});
+}
+
+function svgCreateRect(x, y, className){
+	var el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+	el.setAttribute("x", x);
+	el.setAttribute("y", y);
+	el.setAttribute("rx", "5");
+	el.setAttribute("ry", "5");
+	el.setAttribute("class", className);
+	return el;
+}
+
+function svgCreateText(x, y, className, txt){
+	var el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	el.setAttribute("x", x);
+	el.setAttribute("y", y);
+	el.setAttribute("class", className);
+	var t = document.createTextNode(txt);
+	el.appendChild(t);
+	return el;
+}
+
+function svgClear(svgContainer){
+	while (svgContainer.firstChild) {
+		svgContainer.removeChild(svgContainer.firstChild);
+	}
+}
+
+function svgResetXandY(){
+	rectX = 50;
+	rectY = 20;
+	textX = 75;
+	textY = 48;
 }
 
 const tuningInput = document.getElementById("tuning");
 const fretsNrInput = document.getElementById("fretsNr");
-
+var rectX = 50; /* Default, fallback. */
+var rectY = 20; /* Default, fallback. */
+var textX = 75; /* Default, fallback. */
+var textY = 48; /* Default, fallback. */
+	
 // ## Entry:
 function updateFretboard() {
 	const lefthanded = document.getElementById("lefthanded").checked;
