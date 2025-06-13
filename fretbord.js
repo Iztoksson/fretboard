@@ -15,10 +15,10 @@ class Note {
 
 	static makeNotesFlat() {
 		return [
-			new Note("Ab", 1, true), new Note("A", 2, true), new Note("B", 3, false),
-			new Note("C", 4, true), new Note("Db", 5, true), new Note("D", 6, true),
-			new Note("E", 7, true), new Note("F", 8, false), new Note("Gb", 9, true),
-			new Note("G", 10, true)
+			new Note("Ab", 1, true), new Note("A", 2, true), new Note("Bb", 3, false),
+			new Note("B", 4, true), new Note("C", 5, true), new Note("Db", 6, true),
+			new Note("D", 7, true), new Note("Eb", 8, false), new Note("E", 9, true),
+			new Note("F", 10, true), new Note("Gb", 11, true), new Note("G", 12, true)
 		];
 	}
 }
