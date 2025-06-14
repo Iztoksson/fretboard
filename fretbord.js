@@ -146,31 +146,38 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 	});
 	
 	// DOTS:
+	var circleX = 75;
 	labelRange.forEach(i => {
-		var dot = "";
 		if (accentedFret.includes(i)) {
-			dot = "O";
-			if (i == 12 || i == 24)
-			{
-				dot = "OO";
+			var dbl = i == 12 || i == 24;
+			if (dbl) {
+				var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+				var circleClassName = "svgDots";
+				
+				var elCircle = svgCreateCircle(6, circleX-12, textY-25, circleClassName, dbl);
+				elG.appendChild(elCircle);
+				svgContainer.appendChild(elG);	
+			
+				var elCircle = svgCreateCircle(6, circleX+12, textY-25, circleClassName, dbl);
+				elG.appendChild(elCircle);
+				svgContainer.appendChild(elG);	
+			}
+			else {
+				var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				var circleClassName = "svgDots";
+				
+				var elCircle = svgCreateCircle(6, circleX, textY-25, circleClassName, dbl);
+				elG.appendChild(elCircle);
+				svgContainer.appendChild(elG);			
 			}
 		}
-		var elG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-		var rectClassName = "svgRectDots";
-		var textClassName = "svgText";
-		var textValue = "";
-		
-		var elRect = svgCreateRect(rectX, rectY, rectClassName);
-		elG.appendChild(elRect);
-		var elText = svgCreateText(textX, textY, textClassName, dot);
-		elG.appendChild(elText);
-		svgContainer.appendChild(elG);
 		rectX += (i == 0 ? 80 : 60);
-		textX += (i == 0 ? 80 : 60);
+		circleX += (i == 0 ? 80 : 60);
 	});
 }
 
-function svgCreateRect(x, y, className){
+function svgCreateRect(x, y, className, dbl){
 	var el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 	el.setAttribute("x", x);
 	el.setAttribute("y", y);
@@ -190,6 +197,15 @@ function svgCreateText(x, y, className, txt){
 	return el;
 }
 
+function svgCreateCircle(r, cx, cy, className){
+	var el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+	el.setAttribute("r", r);
+	el.setAttribute("cx", cx);
+	el.setAttribute("cy", cy);
+	el.setAttribute("class", className);
+	return el;
+}
+
 function svgClear(svgContainer){
 	while (svgContainer.firstChild) {
 		svgContainer.removeChild(svgContainer.firstChild);
@@ -204,7 +220,6 @@ function svgCreateLineString(x1, y1, x2, y2, className) {
 	el.setAttribute("y2", y2);
 	el.setAttribute("class", className);
 	return el;
-	//<line x1="140" y1="40" x2="150" y2="40" class="svgLineString" />
 }
 
 function svgResetXandY(){

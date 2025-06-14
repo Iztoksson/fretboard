@@ -98,8 +98,11 @@ div.toolbarContainer div {
 	stroke:gray;
 	stroke-width:5;
 }
-.svgRectDots {
+.svgDotsRect {
 	width:50px;
 	height:50px;
 	fill: transparent;
+}
+.svgDots {
+	fill: #373737;
 }
