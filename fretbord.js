@@ -28,7 +28,6 @@ const accentedFret = [0, 3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
 const svgContainer = document.getElementById("svgFretboard");
 const tuningInput = document.getElementById("tuning");
 const fretsNrInput = document.getElementById("fretsNr");
-const frets = parseInt(fretsNrInput.value);
 const svgNs = "http://www.w3.org/2000/svg";
 const circleClassName = "svgDots";
 const svgLineStringClassName = "svgLineString";
@@ -154,6 +153,12 @@ function generateFretboard(frets, strings, lefthanded, useFlats, omitAccidentals
 				rectClassName += " note-" + note.Note.replace("b", "").replace("#", "").toLowerCase();
 			}
 			
+			// // WIP: remove notes not in the desired scale:
+			// var scaleNotes = generateNotesInScale("A");
+			// if (!scaleNotes.some(elem => { return JSON.stringify(note) === JSON.stringify(elem);})) {
+				// textValue = ""; /* exclude notes not in requested scale.*/
+			// }
+		
 			var elG = document.createElementNS(svgNs, "g");
 			
 			var elRect = svgCreateRect(rectX, rectY, rectClassName);
@@ -252,6 +257,25 @@ function svgCreateLineString(x1, y1, x2, y2, className) {
 	el.setAttribute("class", className);
 	return el;
 }
+
+function generateNotesInScale(scaleNote){
+	
+	const useFlats = document.getElementById("useFlats").checked;
+	const notes = useFlats ? Note.makeNotesFlat() : Note.makeNotesSharp();
+	var scaleStepsMajor = [0, 2, 2, 1, 2, 2, 2];
+	var scaleStepsMinor = [0, 2, 1, 2, 2, 1, 2];
+	var scaleStartIdx = notes.findIndex(n => n.Note === scaleNote);
+	var scaleIdxSum = 0;
+	var scaleNotesInScale = new Array(0);
+	for(let s = 0; s <= 6; s++) {
+		scaleStartIdx = scaleStartIdx + scaleStepsMajor[s] - (scaleStartIdx + scaleStepsMajor[s]> 11 ? 12 : 0);
+		scaleNotesInScale.push(notes[scaleStartIdx]).Note;
+	}
+	//console.log(scaleNotesInScale);
+	
+	return scaleNotesInScale;
+
+}
 	
 // ## Main function:
 function updateFretboard() {
@@ -259,6 +283,7 @@ function updateFretboard() {
 	const useFlats = document.getElementById("useFlats").checked;
 	const omitAccidentals = document.getElementById("omitSharpsFlats").checked;
 	const tuning = tuningInput.value.trim().split(/\s+/).reverse();
+	const frets = parseInt(fretsNrInput.value);
 	
 	generateFretboard(frets, tuning, lefthanded, useFlats, omitAccidentals);
 }
